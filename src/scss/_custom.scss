@@ -1,0 +1,105 @@
+// Here you can add other styles
+.sidebar {
+  width: 100px;
+  background: #fff;
+}
+.sidebar-brand {
+  background: #fff;
+}
+.sidebar-nav .nav-link {
+  justify-content: center;
+}
+html:not([dir=rtl]) .wrapper {
+  padding-left: 100px;
+}
+.user-icon {
+  align-items: center;
+  img {
+    margin-right: 11px;
+  }
+}
+.sidebar-nav {
+  border-top: var(--cui-header-divider-border-width, 1px) solid var(--cui-header-divider-border-color, #d8dbe0);
+}
+a {
+  color: #005B96;
+  text-decoration: none;
+}
+.primary {
+  color: #005B96;
+}
+.footer {
+  background: #fff;
+  border-top: #fff solid;
+  padding-left: 0;
+}
+.bg-light {
+  background-color: #fff!important;
+}
+.header {
+  border-bottom: none;
+}
+.filteredDiv {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+.filteredReport {
+  margin-top: 27px;
+  margin-bottom: 27px;
+  background: #F1FAFE;
+  border-radius: 10px;
+  padding: 24px 18px;
+}
+.reportTable {
+  width: 100%;
+}
+.projectRow {
+  display: flex;
+  height: 71px;
+  background: #fff;
+  border-radius: 10px;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-top: 5px;
+  align-items: center;
+  font-weight: 700;
+}
+.projectPrice {
+  margin-left: auto;
+}
+.filterText {
+  margin-bottom: 30px;
+}
+.detailHeader {
+  background: white;
+  margin-top: 14px;
+}
+
+.detailHeader, .projectDetails {
+  margin-left: 16px;
+  display: flex;
+  height: 35px;
+  div {
+    // display: flex;
+    // justify-content: center;
+    width: 25%;
+    align-items: center;
+    padding-top: 6px;
+  }
+  div:nth-child(1) {
+    padding-left: 6px;
+  }
+  div:nth-child(3) {
+    text-align: center;
+  }
+  div:nth-child(4) {
+    text-align: right;
+    padding-right: 25px;
+  }
+}
+.projectDetails:nth-child(even) {
+  background: white;
+}
+.pageHeader {
+  padding-left: 0px;
+}
