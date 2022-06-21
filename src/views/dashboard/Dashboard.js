@@ -6,52 +6,59 @@ import projects from './projects'
 const Dashboard = () => {
   const [selectedProject, setProject] = useState('Select project')
   const [selectedGateway, setGateway] = useState('Select gateways')
-  const [tableData, setTableData] = useState([])
+  const [selectedStartDate, setStartDate] = useState('')
+  const [selectedEndDate, setEndDate] = useState('')
+  // const [tableData, setTableData] = useState([])
 
   const generateReport = (filterProject, filterGateway, startDate, endDate) => {
     // Filter reports
-    let newProjects = []
-    projects.forEach((project) => {
-      if (filterProject === 'All projects' || project.name === filterProject) {
-        // Add project to table
-        if (filterGateway === 'All gateways') {
-          let detailsList = []
-          detailsList = project.data.filter((detail) => {
-            return (
-              (!startDate || new Date(startDate) <= new Date(detail.date)) &&
-              (!endDate || new Date(endDate) >= new Date(detail.date))
-            )
-          })
-          let newProject = { ...project }
-          newProject.data = detailsList
-          newProjects.push(newProject)
-        } else {
-          let detailsList = []
-          detailsList = project.data.filter((detail) => {
-            return (
-              detail.gateway === filterGateway &&
-              (!startDate || new Date(startDate) <= new Date(detail.date)) &&
-              (!endDate || new Date(endDate) >= new Date(detail.date))
-            )
-          })
-          let newProject = { ...project }
-          newProject.data = detailsList
-          newProjects.push(newProject)
-        }
-      }
-    })
+    // let newProjects = []
+    // projects.forEach((project) => {
+    //   if (filterProject === 'All projects' || project.name === filterProject) {
+    //     // Add project to table
+    //     if (filterGateway === 'All gateways') {
+    //       let detailsList = []
+    //       detailsList = project.data.filter((detail) => {
+    //         return (
+    //           (!startDate || new Date(startDate) <= new Date(detail.date)) &&
+    //           (!endDate || new Date(endDate) >= new Date(detail.date))
+    //         )
+    //       })
+    //       let newProject = { ...project }
+    //       newProject.data = detailsList
+    //       newProjects.push(newProject)
+    //     } else {
+    //       let detailsList = []
+    //       detailsList = project.data.filter((detail) => {
+    //         return (
+    //           detail.gateway === filterGateway &&
+    //           (!startDate || new Date(startDate) <= new Date(detail.date)) &&
+    //           (!endDate || new Date(endDate) >= new Date(detail.date))
+    //         )
+    //       })
+    //       let newProject = { ...project }
+    //       newProject.data = detailsList
+    //       newProjects.push(newProject)
+    //     }
+    //   }
+    // })
+
     setProject(filterProject)
     setGateway(filterGateway)
-    setTableData(newProjects)
+    setStartDate(startDate)
+    setEndDate(endDate)
+    // setTableData(newProjects)
   }
 
   return (
     <>
       <ReportTableHeader projects={projects} generateProjects={generateReport} />
       <ReportTable
-        projects={tableData}
+        // projects={tableData}
         selectedProject={selectedProject}
         selectedGateway={selectedGateway}
+        selectedStartDate={selectedStartDate}
+        selectedEndDate={selectedEndDate}
       />
     </>
   )

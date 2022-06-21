@@ -11,29 +11,36 @@ import {
 import PropTypes from 'prop-types'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import axios from 'axios'
 
 const ReportTableHeader = (props) => {
-  const [selectedProject, setProject] = useState('Select project')
-  const [selectedGateway, setGateway] = useState('Select gateways')
-  const [projectList, setProjectList] = useState(['All projects'])
-  const [gatewayList, setGatewayList] = useState(['All gateways'])
+  const [selectedProject, setProject] = useState({ id: -1, name: 'Select project' })
+  const [selectedGateway, setGateway] = useState({ id: -1, name: 'Select gateways' })
+  const [projectList, setProjectList] = useState([])
+  const [gatewayList, setGatewayList] = useState([])
   const [startDate, setStartDate] = useState()
   const [endDate, setEndDate] = useState()
-
-  useEffect(() => {
-    // Get Available Product List
-    let newProjectList = ['All projects']
-    let newGatewayList = ['All gateways']
-    props.projects.forEach((project) => {
-      newProjectList.push(project.name)
-      project.data.forEach((detail) => {
-        if (!newGatewayList.includes(detail.gateway)) {
-          newGatewayList.push(detail.gateway)
-        }
+  const baseURL = 'http://178.63.13.157:8090/mock-api/api/'
+  const getAllProjectList = () => {
+    axios
+      .get(`${baseURL}projects`)
+      .then((response) => {
+        setProjectList(response.data.data)
       })
-    })
-    setProjectList(newProjectList)
-    setGatewayList(newGatewayList)
+      .catch((error) => console.error(`Error: ${error}`))
+  }
+
+  const getAllGatewayList = () => {
+    axios
+      .get(`${baseURL}gateways`)
+      .then((response) => {
+        setGatewayList(response.data.data)
+      })
+      .catch((error) => console.error(`Error: ${error}`))
+  }
+  useEffect(() => {
+    getAllProjectList()
+    getAllGatewayList()
   }, [props.projects])
 
   function generateReport() {
@@ -53,21 +60,33 @@ const ReportTableHeader = (props) => {
         </CCol>
         <CCol sm={8} className="d-none d-md-flex button-group">
           <CDropdown className="reportBtn" variant="btn-group">
-            <CDropdownToggle color="success">{selectedProject}</CDropdownToggle>
+            <CDropdownToggle color="success">{selectedProject.name}</CDropdownToggle>
             <CDropdownMenu>
+              <CDropdownItem onClick={() => setProject({ id: 0, name: 'All projects' })}>
+                All projects
+              </CDropdownItem>
               {projectList.map((project, index) => (
-                <CDropdownItem key={index} onClick={() => setProject(project)}>
-                  {project}
+                <CDropdownItem
+                  key={index}
+                  onClick={() => setProject({ id: project.projectId, name: project.name })}
+                >
+                  {project.name}
                 </CDropdownItem>
               ))}
             </CDropdownMenu>
           </CDropdown>
           <CDropdown className="reportBtn" variant="btn-group">
-            <CDropdownToggle color="success">{selectedGateway}</CDropdownToggle>
+            <CDropdownToggle color="success">{selectedGateway.name}</CDropdownToggle>
             <CDropdownMenu>
+              <CDropdownItem onClick={() => setGateway({ id: 0, name: 'All gateways' })}>
+                All gateways
+              </CDropdownItem>
               {gatewayList.map((gateway, index) => (
-                <CDropdownItem key={index} onClick={() => setGateway(gateway)}>
-                  {gateway}
+                <CDropdownItem
+                  key={index}
+                  onClick={() => setGateway({ id: gateway.gatewayId, name: gateway.name })}
+                >
+                  {gateway.name}
                 </CDropdownItem>
               ))}
             </CDropdownMenu>

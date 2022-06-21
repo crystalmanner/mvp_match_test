@@ -1,18 +1,15 @@
-import React from 'react'
-import { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import noData from 'src/assets/images/noData.png'
 import { CRow, CCol } from '@coreui/react'
 import Chart from 'react-google-charts'
 
-class ReportTable extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { expandedRows: [] }
-  }
+const ReportTable = (props) => {
+  const [expandedRows, setExpandedRows] = useState([])
+  const [projects, setProjects] = useState([])
 
-  handleExpand = (project) => {
-    let newExpandedRows = [...this.state.expandedRows]
+  const handleExpand = (project) => {
+    let newExpandedRows = [...expandedRows]
     let idxFound = newExpandedRows.findIndex((id) => {
       return id === project.id
     })
@@ -22,27 +19,27 @@ class ReportTable extends Component {
     } else {
       newExpandedRows.push(project.id)
     }
-    this.setState({ expandedRows: [...newExpandedRows] })
+    setExpandedRows(newExpandedRows)
   }
 
-  isExpanded = (project) => {
-    const idx = this.state.expandedRows.find((id) => {
+  const isExpanded = (project) => {
+    const idx = expandedRows.find((id) => {
       return id === project.id
     })
     return idx > -1
   }
 
-  expandAll = (projects) => {
-    if (this.state.expandedRows.length === projects.length) {
+  const expandAll = (projects) => {
+    if (expandedRows.length === projects.length) {
       let newExpandedRows = []
-      this.setState({ expandedRows: [...newExpandedRows] })
+      setExpandedRows(newExpandedRows)
     } else {
       let newExpandedRows = projects.map((project) => project.id)
-      this.setState({ expandedRows: [...newExpandedRows] })
+      setExpandedRows(newExpandedRows)
     }
   }
 
-  getProjectTotal = (project) => {
+  const getProjectTotal = (project) => {
     let sum = 0
     if (project.data && project.data.length) {
       for (let i = 0; i < project.data.length; i++) {
@@ -52,33 +49,33 @@ class ReportTable extends Component {
     return sum
   }
 
-  formatProjectTotal = (project) => {
-    return this.getProjectTotal(project)
+  const formatProjectTotal = (project) => {
+    return getProjectTotal(project)
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  getTotalAmount = () => {
+  const getTotalAmount = () => {
     let sum = 0
-    for (let i = 0; i < this.props.projects.length; i++) {
-      sum += this.getProjectTotal(this.props.projects[i])
+    for (let i = 0; i < projects.length; i++) {
+      sum += getProjectTotal(projects[i])
     }
     return sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  getRows = (project) => {
+  const getRows = (project) => {
     let rows = []
     const data = project.data || []
 
     const firstRow = (
-      <div className="projectRow" onClick={() => this.handleExpand(project)}>
+      <div className="projectRow" onClick={() => handleExpand(project)}>
         <div>{project.name}</div>
-        <div className="projectPrice">TOTAL: {this.formatProjectTotal(project)} USD</div>
+        <div className="projectPrice">TOTAL: {formatProjectTotal(project)} USD</div>
       </div>
     )
 
     rows.push(firstRow)
-    if (this.isExpanded(project) && data.length > 0) {
+    if (isExpanded(project) && data.length > 0) {
       const dataHeader = (
         <div className="detailHeader">
           <div>Date</div>
@@ -102,25 +99,25 @@ class ReportTable extends Component {
     return rows
   }
 
-  getProjectTable = (projects) => {
+  const getProjectTable = (projects) => {
     const projectRows = projects.map((project) => {
-      return this.getRows(project)
+      return getRows(project)
     })
 
     return <div className="reportTable">{projectRows}</div>
   }
 
-  renderTotalAmount = () => {
+  const renderTotalAmount = () => {
     if (
-      (this.props.selectedProject === 'All projects' &&
-        this.props.selectedGateway === 'All gateways') ||
-      (this.props.selectedProject !== 'All projects' &&
-        this.props.selectedGateway !== 'All gateways')
+      (props.selectedProject.name === 'All projects' &&
+        props.selectedGateway.name === 'All gateways') ||
+      (props.selectedProject.name !== 'All projects' &&
+        props.selectedGateway.name !== 'All gateways')
     ) {
       return (
         <CRow className="total-block">
           <CCol xs>
-            <div>TOTAL: {this.getTotalAmount()}USD</div>
+            <div>TOTAL: {getTotalAmount()}USD</div>
           </CCol>
         </CRow>
       )
@@ -128,25 +125,21 @@ class ReportTable extends Component {
     return <></>
   }
 
-  renderDoughnutChart = () => {
+  const renderDoughnutChart = () => {
     let isProduct =
-      this.props.selectedProject !== 'All projects' && this.props.selectedGateway === 'All gateways'
+      props.selectedProject.name !== 'All projects' && props.selectedGateway.name === 'All gateways'
     let isGateway =
-      this.props.selectedProject === 'All projects' && this.props.selectedGateway !== 'All gateways'
+      props.selectedProject.name === 'All projects' && props.selectedGateway.name !== 'All gateways'
     if (isProduct || isGateway) {
       let data = [['Task', 'Hours per Day']]
       if (isProduct) {
         // Show Gateway chart of the selected project
-        if (this.props.projects.length) {
-          this.props.projects[0].data.forEach((detail) =>
-            data.push([detail.gateway, detail.amount]),
-          )
+        if (projects.length) {
+          projects[0].data.forEach((detail) => data.push([detail.gateway, detail.amount]))
         }
       } else {
         // Show Product chart for selected Gateway
-        this.props.projects.forEach((project) =>
-          data.push([project.name, this.getProjectTotal(project)]),
-        )
+        projects.forEach((project) => data.push([project.name, getProjectTotal(project)]))
       }
 
       const options = {
@@ -161,7 +154,7 @@ class ReportTable extends Component {
             <CRow className="total-block">
               <CCol xs>
                 <div>
-                  {isProduct ? 'PROJECT' : 'GATEWAY'} TOTAL | {this.getTotalAmount()}USD
+                  {isProduct ? 'PROJECT' : 'GATEWAY'} TOTAL | {getTotalAmount()}USD
                 </div>
               </CCol>
             </CRow>
@@ -172,45 +165,45 @@ class ReportTable extends Component {
     return <></>
   }
 
-  render() {
-    if (this.props.projects && this.props.projects.length) {
-      return (
-        <>
-          <CRow>
-            <CCol className="filteredReport" xs>
-              <div className="filterText">
-                {this.props.selectedProject} | {this.props.selectedGateway}
-              </div>
-              <div className="reportDiv">{this.getProjectTable(this.props.projects)}</div>
-            </CCol>
-            {this.renderDoughnutChart()}
-          </CRow>
-          {this.renderTotalAmount()}
-        </>
-      )
-    }
+  if (projects && projects.length) {
     return (
-      <div className="noReportContainer">
-        <div className="noReport">
-          <h4 className="card-title">No reports</h4>
-          <div className="no-data-context">
-            Currently you have no data for the reports to be generated.
-            <br />
-            Once you start generating traffic through the Balance application the reports will be
-            shown.
-          </div>
-          <div>
-            <img height={170} width={400} src={noData} alt="no data" />
-          </div>
-        </div>
-      </div>
+      <>
+        <CRow>
+          <CCol className="filteredReport" xs>
+            <div className="filterText">
+              {props.selectedProject.name} | {props.selectedGateway.name}
+            </div>
+            <div className="reportDiv">{getProjectTable(projects)}</div>
+          </CCol>
+          {renderDoughnutChart()}
+        </CRow>
+        {renderTotalAmount()}
+      </>
     )
   }
+  return (
+    <div className="noReportContainer">
+      <div className="noReport">
+        <h4 className="card-title">No reports</h4>
+        <div className="no-data-context">
+          Currently you have no data for the reports to be generated.
+          <br />
+          Once you start generating traffic through the Balance application the reports will be
+          shown.
+        </div>
+        <div>
+          <img height={170} width={400} src={noData} alt="no data" />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 ReportTable.propTypes = {
-  projects: PropTypes.PropTypes.array.isRequired,
+  // projects: PropTypes.PropTypes.array.isRequired,
   selectedProject: PropTypes.string.isRequired,
   selectedGateway: PropTypes.string.isRequired,
+  selectedStartDate: PropTypes.string.isRequired,
+  selectedEndDate: PropTypes.string.isRequired,
 }
 export default ReportTable
