@@ -20,16 +20,17 @@
 }
 
 .sidebar-nav {
-  border-top: var(--cui-header-divider-border-width, 1px) solid var(--cui-header-divider-border-color, #d8dbe0);
+  border-top: var(--cui-header-divider-border-width, 1px) solid
+    var(--cui-header-divider-border-color, #d8dbe0);
 }
 
 a {
-  color: #005B96;
+  color: #005b96;
   text-decoration: none;
 }
 
 .primary {
-  color: #005B96;
+  color: #005b96;
 }
 
 .footer {
@@ -39,7 +40,7 @@ a {
 }
 
 .bg-light {
-  background-color: #fff!important;
+  background-color: #fff !important;
 }
 
 .header {
@@ -53,8 +54,7 @@ a {
 
 .filteredReport {
   margin-top: 27px;
-  margin-bottom: 27px;
-  background: #F1FAFE;
+  background: #f1fafe;
   border-radius: 10px;
   padding: 24px 18px;
 }
@@ -81,6 +81,7 @@ a {
 
 .filterText {
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
 .detailHeader {
@@ -88,7 +89,8 @@ a {
   margin-top: 14px;
 }
 
-.detailHeader, .projectDetails {
+.detailHeader,
+.projectDetails {
   margin-left: 16px;
   display: flex;
   height: 35px;
@@ -120,7 +122,20 @@ a {
 }
 
 .reportBtn {
-  margin-left: 23px;
+  margin-left: 22px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.reportBtn .btn {
+  font-size: 14px !important;
+  background: #1bc5bd;
+}
+
+html:not([dir='rtl']) .dropdown-toggle::after {
+  padding-top: 1px;
 }
 
 .btn {
@@ -132,16 +147,15 @@ a {
 }
 
 .btn-info {
-  --cui-btn-bg: #005B96;
+  --cui-btn-bg: #005b96;
 }
 
 .containerFluid {
   padding-left: 0px;
 }
 
-@media (min-width: 768px)
-{
-  html:not([dir=rtl]) .wrapper {
+@media (min-width: 768px) {
+  html:not([dir='rtl']) .wrapper {
     padding-left: 100px;
   }
   .containerFluid {
@@ -149,6 +163,9 @@ a {
   }
   .wrapper .body {
     padding-right: 100px !important;
+  }
+  .pieChart {
+    margin-left: 30px;
   }
 }
 
@@ -176,3 +193,52 @@ a {
 // .pieChart g:nth-child(1){
 //   display: none;
 // }
+
+.total-block {
+  height: 53px;
+  margin-top: 27px;
+  background: #f1fafe;
+  border-radius: 10px;
+  align-items: center;
+  font-weight: 700;
+}
+.react-datepicker-wrapper {
+  max-width: 118px;
+  margin-left: 22px;
+  height: 32px;
+  font-size: 14px;
+}
+.reportDate {
+  cursor: pointer;
+  max-width: 118px;
+  height: 32px;
+  background: #1bc5bd;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--cui-btn-color, rgba(44, 56, 74, 0.95));
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  user-select: none;
+  /* background-color: var(--cui-btn-bg, transparent); */
+  border: 1px solid var(--cui-btn-border-color, transparent);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+}
+
+.reportDate::placeholder {
+  color: white;
+  opacity: 1;
+}
+
+.button-group {
+  justify-content: flex-end;
+}

@@ -8,7 +8,6 @@ import {
   CHeaderNav,
   CHeaderToggler,
 } from '@coreui/react'
-import { AppBreadcrumb } from './index'
 import LogoImg from 'src/assets/brand/logo.svg'
 import cilMenu from 'src/assets/icons/expand_icon.png'
 import userIcon from 'src/assets/icons/user_icon.png'

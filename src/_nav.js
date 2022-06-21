@@ -10,32 +10,32 @@ const _nav = [
   {
     component: CNavItem,
     name: '',
-    to: '/dashboard',
-    icon: <img customClassName="nav-icon" height={24} src={barchart} alt="barchart" />,
+    to: '/barchart',
+    icon: <img height={24} src={barchart} alt="barchart" />,
+  },
+  {
+    component: CNavItem,
+    name: '',
+    to: '/view',
+    icon: <img height={24} src={view} alt="dashboard" />,
   },
   {
     component: CNavItem,
     name: '',
     to: '/dashboard',
-    icon: <img customClassName="nav-icon" height={24} src={view} alt="barchart" />,
+    icon: <img height={24} src={dashboard} alt="barchart" />,
   },
   {
     component: CNavItem,
     name: '',
-    to: '/dashboard',
-    icon: <img customClassName="nav-icon" height={24} src={dashboard} alt="barchart" />,
+    to: '/piechart',
+    icon: <img height={24} src={piechart} alt="piechart" />,
   },
   {
     component: CNavItem,
     name: '',
-    to: '/charts',
-    icon: <img customClassName="nav-icon" height={24} src={piechart} alt="piechart" />,
-  },
-  {
-    component: CNavItem,
-    name: '',
-    to: '/charts',
-    icon: <img customClassName="nav-icon" height={24} src={power} alt="piechart" />,
+    to: '/power',
+    icon: <img height={24} src={power} alt="piechart" />,
   },
 ]
 

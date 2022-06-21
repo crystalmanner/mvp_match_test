@@ -3,7 +3,6 @@ import { Component } from 'react'
 import PropTypes from 'prop-types'
 import noData from 'src/assets/images/noData.png'
 import { CRow, CCol } from '@coreui/react'
-// import { CChartDoughnut } from '@coreui/react-chartjs'
 import Chart from 'react-google-charts'
 
 class ReportTable extends Component {
@@ -12,17 +11,8 @@ class ReportTable extends Component {
     this.state = { expandedRows: [] }
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (JSON.stringify(this.props.projects) === JSON.stringify(nextProps.projects)) {
-      return false
-    } else {
-      return true
-    }
-  }
-
   handleExpand = (project) => {
     let newExpandedRows = [...this.state.expandedRows]
-    let allExpanded = this.state.allExpanded
     let idxFound = newExpandedRows.findIndex((id) => {
       return id === project.id
     })
@@ -52,24 +42,26 @@ class ReportTable extends Component {
     }
   }
 
-  formatProjectTotal = (project) => {
+  getProjectTotal = (project) => {
     let sum = 0
     if (project.data && project.data.length) {
       for (let i = 0; i < project.data.length; i++) {
         sum += project.data[i].amount
       }
     }
-    return sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    return sum
+  }
+
+  formatProjectTotal = (project) => {
+    return this.getProjectTotal(project)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
   getTotalAmount = () => {
     let sum = 0
     for (let i = 0; i < this.props.projects.length; i++) {
-      if (this.props.projects[i].data && this.props.projects[i].data.length) {
-        for (let j = 0; j < this.props.projects[i].data.length; j++) {
-          sum += this.props.projects[i].data[j].amount
-        }
-      }
+      sum += this.getProjectTotal(this.props.projects[i])
     }
     return sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
@@ -107,7 +99,6 @@ class ReportTable extends Component {
 
       rows.push(dataList)
     }
-
     return rows
   }
 
@@ -127,7 +118,7 @@ class ReportTable extends Component {
         this.props.selectedGateway !== 'All gateways')
     ) {
       return (
-        <CRow className="filteredReport">
+        <CRow className="total-block">
           <CCol xs>
             <div>TOTAL: {this.getTotalAmount()}USD</div>
           </CCol>
@@ -143,29 +134,38 @@ class ReportTable extends Component {
     let isGateway =
       this.props.selectedProject === 'All projects' && this.props.selectedGateway !== 'All gateways'
     if (isProduct || isGateway) {
-      const data = [
-        ['Task', 'Hours per Day'],
-        ['Work', 11],
-        ['Eat', 2],
-        ['Commute', 2],
-        ['Watch TV', 2],
-        ['Sleep', 7],
-      ]
+      let data = [['Task', 'Hours per Day']]
+      if (isProduct) {
+        // Show Gateway chart of the selected project
+        if (this.props.projects.length) {
+          this.props.projects[0].data.forEach((detail) =>
+            data.push([detail.gateway, detail.amount]),
+          )
+        }
+      } else {
+        // Show Product chart for selected Gateway
+        this.props.projects.forEach((project) =>
+          data.push([project.name, this.getProjectTotal(project)]),
+        )
+      }
+
       const options = {
         pieHole: 0.4,
         is3D: false,
       }
+
       return (
         <>
           <CCol className="pieChart" xs>
             <Chart chartType="PieChart" width="100%" height="350px" data={data} options={options} />
+            <CRow className="total-block">
+              <CCol xs>
+                <div>
+                  {isProduct ? 'PROJECT' : 'GATEWAY'} TOTAL | {this.getTotalAmount()}USD
+                </div>
+              </CCol>
+            </CRow>
           </CCol>
-          <CRow className="filteredReport">
-            <CCol xs>
-              <div>TOTAL: {this.getTotalAmount()}USD</div>
-            </CCol>
-          </CRow>
-          <div>{isProduct}</div>
         </>
       )
     }
@@ -176,7 +176,6 @@ class ReportTable extends Component {
     if (this.props.projects && this.props.projects.length) {
       return (
         <>
-          <button onClick={() => this.props.childTestFunc('testtest')}>test button</button>
           <CRow>
             <CCol className="filteredReport" xs>
               <div className="filterText">
@@ -213,6 +212,5 @@ ReportTable.propTypes = {
   projects: PropTypes.PropTypes.array.isRequired,
   selectedProject: PropTypes.string.isRequired,
   selectedGateway: PropTypes.string.isRequired,
-  childTestFunc: PropTypes.func.isRequired,
 }
 export default ReportTable
